@@ -1,33 +1,82 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import "./index.css";
+import Card from './Components/Card';
+import { useState, useEffect } from 'react';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [pokemonIds, setPokemonIds] = useState([]);
+  const [currentScore, setCurrentScore] = useState(0);
+  const [highestScore, setHighestScore] = useState(0);
+  const [clickedPokemonIds, setClickedPokemonIds] = useState([]);
+
+  useEffect(() => {
+    const ids = [];
+    while (ids.length < 10) {
+      const randomId = Math.floor(Math.random() * 1000 + 1);
+      if (!ids.includes(randomId)) {
+        ids.push(randomId);
+      }
+    }
+    setPokemonIds(ids);
+  }, []);
+
+
+  const shuffle = () => {
+    const shuffledIds = [...pokemonIds];
+    for (let i = shuffledIds.length -1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i+1));
+      [shuffledIds[i], shuffledIds[j]] = [shuffledIds[j], shuffledIds[i]];
+    }
+    setPokemonIds(shuffledIds);
+  }
+
+
+  const handleCardClick = (key) => {
+    if (clickedPokemonIds.includes(key)) {
+     if (currentScore > highestScore) {
+      setHighestScore(currentScore);
+     }
+     setCurrentScore(0);
+     setClickedPokemonIds([]);
+    }
+    else {
+      setCurrentScore(prevScore => {
+        const newScore = prevScore + 1;
+        if (newScore > highestScore) {
+          setHighestScore(newScore);
+        }
+        return newScore;
+      });
+      setClickedPokemonIds(prev => [...prev, key]);
+      if (currentScore > highestScore) {
+        setHighestScore(currentScore);
+      }
+    }
+    shuffle();
+  }
+
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+     <p>Pokemon Memory Game</p>
+     <div className="scores">
+        <div className="current-score">
+          <p>Current Score: {currentScore}</p>
+        </div>
+        <div className="high-score">
+          <p>Highest Score: {highestScore}</p>
+        </div>
+     </div>
+     <div className='cards'>
+     {pokemonIds.map((id) => (
+      <Card 
+        key={id}
+        pokemonId={id}
+        handleCardClick={() => handleCardClick(id)}
+      />
+     ))}
+     </div>
     </>
   )
 }
