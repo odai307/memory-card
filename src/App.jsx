@@ -1,6 +1,7 @@
 import './App.css';
 import "./index.css";
 import Card from './Components/Card';
+import GameOver from './Components/GameOver';
 import { useState, useEffect } from 'react';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   const [currentScore, setCurrentScore] = useState(0);
   const [highestScore, setHighestScore] = useState(0);
   const [clickedPokemonIds, setClickedPokemonIds] = useState([]);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   useEffect(() => {
     const ids = [];
@@ -32,13 +34,18 @@ function App() {
   }
 
 
+  const restartGame = () => {
+    setIsGameOver(false);
+    setCurrentScore(0);
+    setClickedPokemonIds([]);
+  }
+
   const handleCardClick = (key) => {
     if (clickedPokemonIds.includes(key)) {
      if (currentScore > highestScore) {
       setHighestScore(currentScore);
      }
-     setCurrentScore(0);
-     setClickedPokemonIds([]);
+     setIsGameOver(true);
     }
     else {
       setCurrentScore(prevScore => {
@@ -59,26 +66,31 @@ function App() {
 
   return (
     <>
-     <p>Pokemon Memory Game</p>
-     <div className="scores">
+      <p>Pokemon Memory Game</p>
+      <div className="scores">
         <div className="current-score">
           <p>Current Score: {currentScore}</p>
         </div>
         <div className="high-score">
           <p>Highest Score: {highestScore}</p>
         </div>
-     </div>
-     <div className='cards'>
-     {pokemonIds.map((id) => (
-      <Card 
-        key={id}
-        pokemonId={id}
-        handleCardClick={() => handleCardClick(id)}
-      />
-     ))}
-     </div>
+      </div>
+      <div className="cards">
+        {pokemonIds.map((id) => (
+          <Card
+            key={id}
+            pokemonId={id}
+            handleCardClick={() => handleCardClick(id)}
+          />
+        ))}
+      </div>
+      {isGameOver && (
+        <GameOver 
+          restartGame={restartGame}
+        />
+      )}
     </>
-  )
-}
+  );
+}  
 
 export default App

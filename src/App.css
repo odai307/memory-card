@@ -58,8 +58,6 @@
     transform: translateY(10px);
 }
 
-
-
 .character-name {
     display: flex;
     justify-content: center;
@@ -80,5 +78,42 @@
     flex: 1;
   }
 
-
+  .gameover {
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Higher than other elements */
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    backdrop-filter: blur(5px);
+  }
+  
+  
+  .gameover div {
+    background: rgba(0, 0, 0, 0.6); /* Slightly more transparent background */
+    padding: 2rem;
+    border-radius: 10px;
+   
+  }
+  
+  .gameover button {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .gameover button:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
   
