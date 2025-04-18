@@ -1,12 +1,12 @@
-const GameOver = ({restartGame}) => {
+const GameResult = ({restartGame, gameWin}) => {
   return (
     <div className="gameover">
         <div>
-            <p>Game Over!</p>
+            <p>{gameWin ? "You Won!" : "You Lost!"}</p>
             <button onClick={restartGame}>Restart</button>
         </div>
     </div>
   );
 };
 
-export default GameOver;
+export default GameResult;

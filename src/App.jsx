@@ -1,16 +1,17 @@
 import './App.css';
 import "./index.css";
 import Card from './Components/Card';
-import GameOver from './Components/GameOver';
+import GameResult from './Components/GameResult';
 import { useState, useEffect } from 'react';
 
 function App() {
 
   const [pokemonIds, setPokemonIds] = useState([]);
   const [currentScore, setCurrentScore] = useState(0);
-  const [highestScore, setHighestScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
   const [clickedPokemonIds, setClickedPokemonIds] = useState([]);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [gameWin, setGameWin] = useState(false);
 
   useEffect(() => {
     const ids = [];
@@ -36,30 +37,38 @@ function App() {
 
   const restartGame = () => {
     setIsGameOver(false);
+    setGameWin(false);
     setCurrentScore(0);
     setClickedPokemonIds([]);
   }
 
   const handleCardClick = (key) => {
     if (clickedPokemonIds.includes(key)) {
-     if (currentScore > highestScore) {
-      setHighestScore(currentScore);
+     if (currentScore > bestScore) {
+      setBestScore(currentScore);
      }
      setIsGameOver(true);
     }
     else {
       setCurrentScore(prevScore => {
         const newScore = prevScore + 1;
-        if (newScore > highestScore) {
-          setHighestScore(newScore);
+        if (newScore > bestScore) {
+          setBestScore(newScore);
         }
         return newScore;
       });
-      setClickedPokemonIds(prev => [...prev, key]);
-      if (currentScore > highestScore) {
-        setHighestScore(currentScore);
+      setClickedPokemonIds(prev => {
+        const updated = [...prev, key]
+        if (updated.length == pokemonIds.length) {
+          setGameWin(true);
+        }
+        return updated;
+      });
+      if (currentScore > bestScore) {
+        setBestScore(currentScore);
       }
     }
+    
     shuffle();
   }
 
@@ -72,7 +81,7 @@ function App() {
           <p>Current Score: {currentScore}</p>
         </div>
         <div className="high-score">
-          <p>Highest Score: {highestScore}</p>
+          <p>Best Score: {bestScore}</p>
         </div>
       </div>
       <div className="cards">
@@ -84,9 +93,10 @@ function App() {
           />
         ))}
       </div>
-      {isGameOver && (
-        <GameOver 
+      {(isGameOver || gameWin) && (
+        <GameResult 
           restartGame={restartGame}
+          gameWin = {gameWin}
         />
       )}
     </>
