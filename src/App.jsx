@@ -25,6 +25,11 @@ function App() {
   }, []);
 
 
+  useEffect(() => {
+    document.title = `Memory Game. Score: ${currentScore}`
+  }, [currentScore]);
+
+
   const shuffle = () => {
     const shuffledIds = [...pokemonIds];
     for (let i = shuffledIds.length -1; i > 0; i--) {
@@ -75,7 +80,7 @@ function App() {
 
   return (
     <>
-      <p>Pokemon Memory Game</p>
+      <p>Memory Game</p>
       <div className="scores">
         <div className="current-score">
           <p>Current Score: {currentScore}</p>
